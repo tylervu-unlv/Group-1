@@ -1,4 +1,5 @@
 Team Contributors
 
-Name | GitHub Username
------|----------------
+Name    | GitHub Username
+--------|----------------
+Cheda   |Cheda-prog
