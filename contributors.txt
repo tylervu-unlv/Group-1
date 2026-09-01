@@ -2,6 +2,7 @@ Team Contributors
 
 Name               | GitHub Username
 -------------------|----------------
+Alex Cheda         | Cheda-prog
 Christopher Flores | Bigolbean7804
 Daniela Lopez      | zombieg1rl
 Finnagin Wantland  | FinnWant
