@@ -22,10 +22,10 @@ def github_auth(url, token):
         print(e)
     return jsonData
 
-# @dictFiles, empty dictionary of files
-# @token, environment variable for your token
+# @touches, list for (file, author, date)
+# @token, GitHub auth token
 # @repo, GitHub repo
-def countfiles(dictfiles, token, repo):
+def collect_touches(touches, token, repo):
     ipage = 1  # url page counter
     ct = 0  # token counter
 
@@ -42,6 +42,10 @@ def countfiles(dictfiles, token, repo):
             # iterate through the list of commits in  spage
             for shaObject in jsonCommits:
                 sha = shaObject['sha']
+                if len(shaObject['parents']) > 1:
+                    continue
+                author = shaObject['commit']['author']['name']
+                date = shaObject['commit']['author']['date']
                 # For each commit, use the GitHub commit API to extract the files touched by the commit
                 shaUrl = 'https://api.github.com/repos/' + repo + '/commits/' + sha
                 shaDetails = github_auth(shaUrl, token)
@@ -49,8 +53,8 @@ def countfiles(dictfiles, token, repo):
                 for filenameObj in filesjson:
                     filename = filenameObj['filename']
                     if filename.endswith(SOURCE_EXTENSIONS):
-                        dictfiles[filename] = dictfiles.get(filename, 0) + 1
-                        print(filename)
+                        touches.append([filename, author, date])
+                        print(filename, author, date)
             ipage += 1
     except:
         print("Error receiving data")
@@ -74,25 +78,19 @@ repoInfo = github_auth(repoInfoUrl, token)
 default_branch = repoInfo['default_branch']
 print('Default branch: ' + default_branch)
 
-dictfiles = dict()
-countfiles(dictfiles, token, repo)
-print('Total number of files: ' + str(len(dictfiles)))
+touches = []
+collect_touches(touches, token, repo)
+print('Total touches recorded: ' + str(len(touches)))
 
 file = repo.split('/')[1]
 # change this to the path of your file
-fileOutput = 'data/file_' + file + '.csv'
-rows = ["Filename", "Touches"]
+fileOutput = 'data/touches_' + file + '.csv'
+rows = ["Filename", "Author", "Date"]
 fileCSV = open(fileOutput, 'w')
 writer = csv.writer(fileCSV)
 writer.writerow(rows)
 
-bigcount = None
-bigfilename = None
-for filename, count in dictfiles.items():
-    rows = [filename, count]
-    writer.writerow(rows)
-    if bigcount is None or count > bigcount:
-        bigcount = count
-        bigfilename = filename
+for row in touches:
+    writer.writerow(row)
 fileCSV.close()
-print('The file ' + bigfilename + ' has been touched ' + str(bigcount) + ' times.')
+print('Touch data written to ' + fileOutput)
