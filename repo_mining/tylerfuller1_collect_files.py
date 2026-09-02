@@ -68,6 +68,12 @@ if not token:
     print("Error: GITHUB_TOKEN environment variable not set.")
     exit(1)
 
+# determines default branch instead of assuming its main
+repoInfoUrl = 'https://api.github.com/repos/' + repo
+repoInfo = github_auth(repoInfoUrl, token)
+default_branch = repoInfo['default_branch']
+print('Default branch: ' + default_branch)
+
 dictfiles = dict()
 countfiles(dictfiles, token, repo)
 print('Total number of files: ' + str(len(dictfiles)))
