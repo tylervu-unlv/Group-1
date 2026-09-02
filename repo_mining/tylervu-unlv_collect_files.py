@@ -21,70 +21,143 @@ def github_auth(url, lsttoken, ct):
         print(e)
     return jsonData, ct
 
-# @dictFiles, empty dictionary of files
+# get the default branch name
+def get_default_branch(repo, lsttokens):
+    url = 'https://api.github.com/repos/' + repo
+    jsonData, ct = github_auth(url, lsttokens, 0)
+
+    if jsonData is not None:
+        return jsonData['default_branch']
+
+    return None
+
+# file extensions that indicate source files in repository
+SOURCE_EXTENSIONS = {
+    '.java': 'Java',
+    '.kt': 'Kotlin',
+    '.c': 'C',
+    '.cpp': 'C++',
+    '.h': 'Header',
+    '.xml': 'XML'
+}
+
+# file extensions that are not source
+NON_SOURCE_EXTENSIONS = {
+    '.class',
+    '.jar',
+    '.aar',
+    '.apk',
+    '.dex',
+    '.so',
+    '.o',
+    '.a',
+    '.dll',
+    '.exe'
+}
+
+NON_SOURCE_DIRECTORIES = {
+    '.git',
+    '.gradle',
+    'build',
+    'out',
+    'target',
+    'bin',
+    'generated',
+    'node_modules'
+}
+
+# check for source extensions
+def is_source_file(filename):
+    filename = filename.replace('\\', '/')
+
+    # check if directory includes non source
+    path_parts = filename.split('/')
+    for directory in path_parts[:-1]:
+        if directory in NON_SOURCE_DIRECTORIES:
+            return False
+
+    # get file extension
+    extension = os.path.splitext(filename)[1].lower()
+
+    # if not source extension then false
+    if extension in NON_SOURCE_EXTENSIONS:
+        return False
+
+    # if source extension then return
+    return extension in SOURCE_EXTENSIONS
+
+
+# @branch, default branch of repo
 # @lstTokens, GitHub authentication tokens
 # @repo, GitHub repo
-def countfiles(dictfiles, lsttokens, repo):
-    ipage = 1  # url page counter
-    ct = 0  # token counter
+# Collect source files from the repository
+def collect_source_files(repo, branch, lsttokens):
+    source_files = []
+    ct = 0
+    page = 1
 
-    try:
-        # loop though all the commit pages until the last returned empty page
-        while True:
-            spage = str(ipage)
-            commitsUrl = 'https://api.github.com/repos/' + repo + '/commits?page=' + spage + '&per_page=100'
-            jsonCommits, ct = github_auth(commitsUrl, lsttokens, ct)
+    while True:
+        url = (
+            'https://api.github.com/repos/' + repo +
+            '/git/trees/' + branch +
+            '?recursive=1'
+        )
 
-            # break out of the while loop if there are no more commits in the pages
-            if len(jsonCommits) == 0:
-                break
-            # iterate through the list of commits in  spage
-            for shaObject in jsonCommits:
-                sha = shaObject['sha']
-                # For each commit, use the GitHub commit API to extract the files touched by the commit
-                shaUrl = 'https://api.github.com/repos/' + repo + '/commits/' + sha
-                shaDetails, ct = github_auth(shaUrl, lsttokens, ct)
-                filesjson = shaDetails['files']
-                for filenameObj in filesjson:
-                    filename = filenameObj['filename']
-                    dictfiles[filename] = dictfiles.get(filename, 0) + 1
-                    print(filename)
-            ipage += 1
-    except:
-        print("Error receiving data")
-        exit(0)
+        treeData, ct = github_auth(url, lsttokens, ct)
+
+        if treeData is None:
+            break
+
+        if 'tree' not in treeData:
+            break
+
+        for item in treeData['tree']:
+            if item['type'] == 'blob':
+                filename = item['path']
+
+                if is_source_file(filename):
+                    source_files.append(filename)
+
+        break
+
+    return source_files
 # GitHub repo
 repo = 'scottyab/rootbeer'
-# repo = 'Skyscanner/backpack' # This repo is commit heavy. It takes long to finish executing
-# repo = 'k9mail/k-9' # This repo is commit heavy. It takes long to finish executing
-# repo = 'mendhak/gpslogger'
 
 
 # put your tokens here
 # Remember to empty the list when going to commit to GitHub.
 # Otherwise they will all be reverted and you will have to re-create them
 # I would advise to create more than one token for repos with heavy commits
-lstTokens = [""]
+print("User Token: ")
+lstTokens = [input()]
 
-dictfiles = dict()
-countfiles(dictfiles, lstTokens, repo)
-print('Total number of files: ' + str(len(dictfiles)))
+# get default  branch of repo
+default_branch = get_default_branch(repo, lstTokens)
+# if no default branch
+if default_branch is None:
+    print("Default branch not found.")
+    exit(0)
 
-file = repo.split('/')[1]
-# change this to the path of your file
-fileOutput = 'data/file_' + file + '.csv'
-rows = ["Filename", "Touches"]
-fileCSV = open(fileOutput, 'w')
-writer = csv.writer(fileCSV)
-writer.writerow(rows)
+print("\nDefault branch: " + default_branch)
 
-bigcount = None
-bigfilename = None
-for filename, count in dictfiles.items():
-    rows = [filename, count]
-    writer.writerow(rows)
-    if bigcount is None or count > bigcount:
-        bigcount = count
-        bigfilename = filename
-fileCSV.close()
-print('The file ' + bigfilename + ' has been touched ' + str(bigcount) + ' times.')
+# get source files
+source_files = collect_source_files(repo, default_branch, lstTokens)
+
+# display programming languages found
+languages = set()
+# sorts/splits source files into languages
+for filename in source_files:
+    extension = os.path.splitext(filename)[1].lower()
+
+    if extension in SOURCE_EXTENSIONS:
+        languages.add(SOURCE_EXTENSIONS[extension])
+
+print("\nProgramming languages used for source files:")
+for language in sorted(languages):
+    print(language)
+
+# display source files chosen
+print("\nSource files selected for analysis:")
+for filename in sorted(source_files):
+    print(filename)
