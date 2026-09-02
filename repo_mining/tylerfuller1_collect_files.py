@@ -7,6 +7,9 @@ import os
 if not os.path.exists("data"):
  os.makedirs("data")
 
+#extensions that will be considered as "source code"
+SOURCE_EXTENSIONS = ('.java', '.kt', '.cpp', '.h', '.c')
+
 # GitHub Authentication function
 def github_auth(url, token):
     jsonData = None
@@ -45,8 +48,9 @@ def countfiles(dictfiles, token, repo):
                 filesjson = shaDetails['files']
                 for filenameObj in filesjson:
                     filename = filenameObj['filename']
-                    dictfiles[filename] = dictfiles.get(filename, 0) + 1
-                    print(filename)
+                    if filename.endswith(SOURCE_EXTENSIONS):
+                        dictfiles[filename] = dictfiles.get(filename, 0) + 1
+                        print(filename)
             ipage += 1
     except:
         print("Error receiving data")
