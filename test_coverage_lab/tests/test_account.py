@@ -99,6 +99,39 @@ Each test should include:
 # - Verify that the account object is correctly serialized to a dictionary.
 # - Ensure all expected fields are included in the output.
 # Target Method: to_dict()
+# ===========================
+# Test: Test account serialization
+# Author: Tyler Vu
+# Date: 2026-09-09
+# Description: Ensure the account object is correctly serialized to a dictionary.
+# ===========================
+# create function to test
+def test_account_serialization():
+    """Test converting an account to a dictionary"""
+    # sets account with random info to check
+    account = Account(name="Tyler Vu", email = "tyler@gmail.com", role = "user",
+                      phone_number="702-111-1234", balance = 500.0)
+    # sets a password
+    account.set_password("testing4life")
+    db.session.add(account)
+    db.session.commit()
+
+    data = account.to_dict()
+
+    #check outputs
+    assert data["id"] == account.id
+    assert data["name"] == "Tyler Vu"
+    assert data["email"] == "tyler@gmail.com"
+    assert data["role"] == "user"
+    assert data["phone_number"] == "702-111-1234"
+    assert data["disabled"] == account.disabled
+    assert data["date_joined"] == account.date_joined
+    assert data["balance"] == 500.0
+
+    # verify if account is serialized
+    assert "password_hash" not in data
+    
+    
 
 # Student 2: Test invalid email input
 # - Ensure invalid email formats raise a validation error.
