@@ -155,9 +155,49 @@ def test_account_serialization():
 # - Verify that withdrawing a valid amount correctly decreases the balance.
 # Target Method: withdraw()
 
+# ===========================
+# Test: Valid Withdrawal
+# Author: Finn Wantland
+# Date: 2026-09-13
+# Description: Ensure that withdrawing a valid amount (positive and no
+#   greater than the current balance) correctly decreases the account
+#   balance by the withdrawn amount.
+# Issue: Add a test for valid withdrawal
+# ===========================
+
+def test_valid_withdrawal():
+    """Test that a valid withdrawal correctly decreases the account balance"""
+    account = Account(name="Jane Doe", email="janedoe@example.com", balance=100.0)
+
+    # Withdraw a valid amount
+    account.withdraw(40.0)
+
+    # Balance should be reduced by exactly the withdrawn amount
+    assert account.balance == 60.0
+
 # Student 7: Test withdrawal with insufficient funds
 # - Ensure withdrawal fails when balance is insufficient.
 # Target Method: withdraw()
+
+# ===========================
+# Test: Withdrawal with Insufficient Funds
+# Author: Finn Wantland
+# Date: 2026-09-13
+# Description: Ensure that attempting to withdraw more than the current
+#   balance raises a DataValidationError and leaves the balance unchanged.
+# Issue: Add a test for insufficient-funds withdrawal
+# ===========================
+
+def test_withdraw_insufficient_funds():
+    """Test that withdrawing more than the available balance raises an error"""
+    account = Account(name="Jane Doe", email="janedoe@example.com", balance=50.0)
+
+    # Attempt to withdraw more than the balance
+    with pytest.raises(DataValidationError):
+        account.withdraw(100.0)
+
+    # Balance should remain unchanged after the failed withdrawal
+    assert account.balance == 50.0
 
 # Student 8: Test password hashing
 # - Ensure passwords are properly hashed.
