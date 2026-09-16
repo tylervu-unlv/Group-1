@@ -17,5 +17,9 @@ def create_counter(name):
     """Create a counter"""
     if counter_exists(name):
         return jsonify({"error": f"Counter {name} already exists"}), status.HTTP_409_CONFLICT
+    
+    """Check if counter is non-alphanumeric"""
+    if not name.isalnum():
+        return jsonify({"error": f"Invalid counter name: {name}"}), status.HTTP_400_BAD_REQUEST
     COUNTERS[name] = 0
     return jsonify({name: COUNTERS[name]}), status.HTTP_201_CREATED
