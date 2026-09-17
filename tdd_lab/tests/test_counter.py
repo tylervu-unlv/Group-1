@@ -27,3 +27,10 @@ class TestCounterEndpoints:
         """It should create a counter"""
         result = client.post('/counters/foo')
         assert result.status_code == status.HTTP_201_CREATED
+
+    def test_get_counter(self, client):
+        """It should retrieve an existing counter"""
+        client.post('/counters/foo')
+        result = client.get('/counters/foo')
+        assert result.status_code == status.HTTP_200_OK
+        assert result.get_json() == {"foo": 0}

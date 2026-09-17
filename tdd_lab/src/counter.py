@@ -18,4 +18,15 @@ def create_counter(name):
     if counter_exists(name):
         return jsonify({"error": f"Counter {name} already exists"}), status.HTTP_409_CONFLICT
     COUNTERS[name] = 0
-    return jsonify({name: COUNTERS[name]}), status.HTTP_201_CREATED
+    return counter_response(name, status.HTTP_201_CREATED)
+
+@app.route('/counters/<name>', methods=['GET'])
+def get_counter(name):
+    """Retrieve an existing counter"""
+    if not counter_exists(name):
+        return jsonify({"error": f"Counter {name} does not exist"}), status.HTTP_404_NOT_FOUND
+    return counter_response(name, status.HTTP_200_OK)
+
+def counter_response(name, http_status):
+    """Build the standard JSON response for a counter"""
+    return jsonify({name: COUNTERS[name]}), http_status
