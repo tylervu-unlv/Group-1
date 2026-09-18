@@ -1,3 +1,4 @@
+import os
 """
 Counter API Implementation
 """
@@ -135,3 +136,4 @@ def describe_status(code):
     }
     return mapping.get(code, "Unknown")
 
+print(this_variable_does_not_exist)
