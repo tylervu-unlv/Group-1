@@ -25,7 +25,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Tests with Pytest
-        run: pytest --cov=src --cov-report=term-missing
+        run: pytest --cov=src --cov-report=term-missing --cov-fail-under=80
 
       - name: Install Flake8
         run: pip install flake8
