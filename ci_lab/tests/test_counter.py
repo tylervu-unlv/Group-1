@@ -37,72 +37,72 @@ def client():
 class TestCounterEndpoints:
     """Test cases for Counter API"""
 
-    # def test_create_counter(self, client):
-    #     """It should create a counter"""
-    #     response = client.post('/counters/test_counter')
-    #     assert response.status_code == status.HTTP_201_CREATED
-    #     assert response.get_json() == {"test_counter": 0}
+    def test_create_counter(self, client):
+        """It should create a counter"""
+        response = client.post('/counters/test_counter')
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.get_json() == {"test_counter": 0}
 
-    # def test_prevent_duplicate_counter(self, client):
-    #     """It should not allow duplicate counters"""
-    #     client.post('/counters/test_counter')
-    #     response = client.post('/counters/test_counter')
-    #     assert response.status_code == status.HTTP_409_CONFLICT
+    def test_prevent_duplicate_counter(self, client):
+        """It should not allow duplicate counters"""
+        client.post('/counters/test_counter')
+        response = client.post('/counters/test_counter')
+        assert response.status_code == status.HTTP_409_CONFLICT
 
-    # def test_retrieve_existing_counter(self, client):
-    #     """It should retrieve an existing counter"""
-    #     client.post('/counters/test_counter')
-    #     response = client.get('/counters/test_counter')
-    #     assert response.status_code == status.HTTP_200_OK
-    #     assert response.get_json() == {"test_counter": 0}
+    def test_retrieve_existing_counter(self, client):
+        """It should retrieve an existing counter"""
+        client.post('/counters/test_counter')
+        response = client.get('/counters/test_counter')
+        assert response.status_code == status.HTTP_200_OK
+        assert response.get_json() == {"test_counter": 0}
 
-    # def test_return_404_for_non_existent_counter(self, client):
-    #     """It should return 404 if counter does not exist"""
-    #     response = client.get('/counters/non_existent')
-    #     assert response.status_code == status.HTTP_404_NOT_FOUND
+    def test_return_404_for_non_existent_counter(self, client):
+        """It should return 404 if counter does not exist"""
+        response = client.get('/counters/non_existent')
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
-    # def test_increment_counter(self, client):
-    #     """It should increment an existing counter"""
-    #     client.post('/counters/test_counter')
-    #     response = client.put('/counters/test_counter')
-    #     assert response.status_code == status.HTTP_200_OK
-    #     assert response.get_json() == {"test_counter": 1}
+    def test_increment_counter(self, client):
+        """It should increment an existing counter"""
+        client.post('/counters/test_counter')
+        response = client.put('/counters/test_counter')
+        assert response.status_code == status.HTTP_200_OK
+        assert response.get_json() == {"test_counter": 1}
 
-    # def test_prevent_updating_non_existent_counter(self, client):
-    #     """It should return 404 if trying to increment a non-existent counter"""
-    #     response = client.put('/counters/non_existent')
-    #     assert response.status_code == status.HTTP_404_NOT_FOUND
+    def test_prevent_updating_non_existent_counter(self, client):
+        """It should return 404 if trying to increment a non-existent counter"""
+        response = client.put('/counters/non_existent')
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
-    # def test_delete_counter(self, client):
-    #     """It should delete an existing counter"""
-    #     client.post('/counters/test_counter')
-    #     response = client.delete('/counters/test_counter')
-    #     assert response.status_code == status.HTTP_204_NO_CONTENT
+    def test_delete_counter(self, client):
+        """It should delete an existing counter"""
+        client.post('/counters/test_counter')
+        response = client.delete('/counters/test_counter')
+        assert response.status_code == status.HTTP_204_NO_CONTENT
 
-    # def test_prevent_deleting_non_existent_counter(self, client):
-    #     """It should return 404 if trying to delete a non-existent counter"""
-    #     response = client.delete('/counters/non_existent')
-    #     assert response.status_code == status.HTTP_404_NOT_FOUND
+    def test_prevent_deleting_non_existent_counter(self, client):
+        """It should return 404 if trying to delete a non-existent counter"""
+        response = client.delete('/counters/non_existent')
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
-    # def test_reset_all_counters(self, client):
-    #     """It should reset all counters"""
-    #     client.post('/counters/test_counter')
-    #     response = client.post('/counters/reset')
-    #     assert response.status_code == status.HTTP_200_OK
-    #     assert response.get_json() == {"message": "All counters have been reset"}
+    def test_reset_all_counters(self, client):
+        """It should reset all counters"""
+        client.post('/counters/test_counter')
+        response = client.post('/counters/reset')
+        assert response.status_code == status.HTTP_200_OK
+        assert response.get_json() == {"message": "All counters have been reset"}
 
-    # def test_list_all_counters(self, client):
-    #     """It should list all counters"""
-    #     client.post('/counters/test_counter1')
-    #     client.post('/counters/test_counter2')
-    #     response = client.get('/counters')
-    #     assert response.status_code == status.HTTP_200_OK
-    #     assert response.get_json() == {"test_counter1": 0, "test_counter2": 0}
+    def test_list_all_counters(self, client):
+        """It should list all counters"""
+        client.post('/counters/test_counter1')
+        client.post('/counters/test_counter2')
+        response = client.get('/counters')
+        assert response.status_code == status.HTTP_200_OK
+        assert response.get_json() == {"test_counter1": 0, "test_counter2": 0}
 
-    # def test_handle_invalid_http_methods(self, client):
-    #     """It should return 405 for unsupported HTTP methods"""
-    #     response = client.patch('/counters/test_counter')
-    #     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+    def test_handle_invalid_http_methods(self, client):
+        """It should return 405 for unsupported HTTP methods"""
+        response = client.patch('/counters/test_counter')
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
     
     
     """Test cases for Extended Counter API"""
@@ -112,15 +112,15 @@ class TestCounterEndpoints:
     # Author: Student 1
     # Modification: Add assertion to check the total value is correct.
     # ===========================
-    # def test_get_total_counters(self, client):
-    #     """It should return the total sum of all counter values"""
-    #     client.post('/counters/test1')
-    #     client.post('/counters/test2')
-    #     client.put('/counters/test1')
+    def test_get_total_counters(self, client):
+        """It should return the total sum of all counter values"""
+        client.post('/counters/test1')
+        client.post('/counters/test2')
+        client.put('/counters/test1')
 
-    #     response = client.get('/counters/total')
+        response = client.get('/counters/total')
 
-    #     assert response.status_code == status.HTTP_200_OK
+        assert response.status_code == status.HTTP_200_OK
         
         # TODO: Add an assertion to check the correct total value
 
@@ -129,19 +129,19 @@ class TestCounterEndpoints:
     # Author: Student 2
     # Modification: Ensure the API returns exactly N counters.
     # ===========================
-    # def test_top_n_counters(self, client):
-    #     """It should return the top N highest counters"""
-    #     client.post('/counters/reset')
-    #     client.post('/counters/a')
-    #     client.post('/counters/b')
-    #     client.put('/counters/a')
-    #     client.put('/counters/b')
-    #     client.put('/counters/b')
+    def test_top_n_counters(self, client):
+        """It should return the top N highest counters"""
+        client.post('/counters/reset')
+        client.post('/counters/a')
+        client.post('/counters/b')
+        client.put('/counters/a')
+        client.put('/counters/b')
+        client.put('/counters/b')
 
-    #     response = client.get('/counters/top/2')
+        response = client.get('/counters/top/2')
 
-    #     assert response.status_code == status.HTTP_200_OK
-    #     assert len(response.get_json()) <= 2  
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.get_json()) <= 2  
 
         # TODO: Add an assertion to ensure the returned counters are sorted correctly
 
