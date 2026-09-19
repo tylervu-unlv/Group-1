@@ -1,1 +1,64 @@
+# Ignore Python virtual environments
+venv/
 .env
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore environment configuration files
+.env
+*.env
+config.yaml
+secrets.json
+
+# Ignore editor and OS-generated files
+.DS_Store
+.idea/
+.vscode/
+Thumbs.db  # Windows thumbnail cache
+desktop.ini  # Windows system file
+$RECYCLE.BIN/  # Windows recycle bin
+*.lnk  # Windows shortcut files
+
+# Ignore dependency files
+node_modules/
+package-lock.json
+
+# Ignore coverage reports
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Ignore pytest cache
+.cache/
+.pytest_cache/
+
+# Ignore Windows-specific files
+NTUSER.DAT
+ntuser.ini
+ntuser.dat.log*
+hiberfil.sys  # Windows hibernation file
+pagefile.sys  # Windows swap file
+swapfile.sys  # Windows swap file
+
+# Ignore JetBrains IDEs (PyCharm, WebStorm, etc.)
+.idea/
+
+# Ignore Visual Studio Code settings
+.vscode/
+
+# Ignore Microsoft Office temporary files
+~$*.docx
+~$*.xlsx
+~$*.pptx
+
+# Ignore Windows Git Bash and PowerShell history
+.bash_history
+.powershell_history

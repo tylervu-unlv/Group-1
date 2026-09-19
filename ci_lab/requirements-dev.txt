@@ -1,0 +1,4 @@
+# Extra tooling for the linting and formatting enhancements.
+# Install with: pip install -r requirements.txt -r requirements-dev.txt
+flake8>=7.0,<8.0
+black>=24.0
